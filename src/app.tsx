@@ -1,4 +1,4 @@
-import { TransactionProvider } from "./context/trasaction-context";
+import { TransactionProvider } from "./context/transaction-provider";
 import { Transactions } from "./pages/transactions";
 
 export function App() {
