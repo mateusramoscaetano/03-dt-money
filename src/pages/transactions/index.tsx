@@ -1,11 +1,33 @@
+import { useEffect, useState } from "react";
 import { Header } from "../../components/header";
 import { Summary } from "../../components/summary";
 import { TableCell } from "../../components/ui/table";
 import { SearchForm } from "./components/search-form";
 
-interface ITransactionsProps {}
+interface ITransaction {
+  id: number;
+  description: string;
+  type: "income" | "outcome";
+  category: string;
+  price: number;
+  createdAt: string;
+}
 
-export function Transactions({}: ITransactionsProps) {
+export function Transactions() {
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
+
+  async function loadTransactions() {
+    const response = await fetch("http://localhost:3000/transactions");
+
+    const data = await response.json();
+
+    setTransactions(data);
+  }
+
+  useEffect(() => {
+    loadTransactions();
+  }, [transactions]);
+
   return (
     <>
       <div className="">
@@ -16,18 +38,18 @@ export function Transactions({}: ITransactionsProps) {
           <SearchForm />
           <table className="w-full border-separate border-spacing-y-2 border-spacing-x-0 mt-6">
             <tbody>
-              <tr>
-                <TableCell width="50%">Desenvolvimento de website</TableCell>
-                <TableCell variant="income">+R$ 12.000,00</TableCell>
-                <TableCell>Venda</TableCell>
-                <TableCell>13/02/2023</TableCell>
-              </tr>
-              <tr>
-                <TableCell width="50%">uber</TableCell>
-                <TableCell variant="outcome">-R$ 12.000,00</TableCell>
-                <TableCell>Venda</TableCell>
-                <TableCell>13/02/2023</TableCell>
-              </tr>
+              {transactions.map((transaction) => {
+                return (
+                  <tr key={transaction.id}>
+                    <TableCell width="50%">{transaction.description}</TableCell>
+                    <TableCell variant={transaction.type}>
+                      +R$ {transaction.price}
+                    </TableCell>
+                    <TableCell>{transaction.category}</TableCell>
+                    <TableCell>{transaction.createdAt}</TableCell>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
