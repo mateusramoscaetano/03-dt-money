@@ -1,32 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Header } from "../../components/header";
 import { Summary } from "../../components/summary";
 import { TableCell } from "../../components/ui/table";
 import { SearchForm } from "./components/search-form";
-
-interface ITransaction {
-  id: number;
-  description: string;
-  type: "income" | "outcome";
-  category: string;
-  price: number;
-  createdAt: string;
-}
+import { TransactionContext } from "../../context/trasaction-context";
+import { dateFormatter, formatCurrency } from "../../utils/formatter";
 
 export function Transactions() {
-  const [transactions, setTransactions] = useState<ITransaction[]>([]);
-
-  async function loadTransactions() {
-    const response = await fetch("http://localhost:3000/transactions");
-
-    const data = await response.json();
-
-    setTransactions(data);
-  }
-
-  useEffect(() => {
-    loadTransactions();
-  }, [transactions]);
+  const { transactions } = useContext(TransactionContext);
 
   return (
     <>
@@ -43,10 +24,13 @@ export function Transactions() {
                   <tr key={transaction.id}>
                     <TableCell width="50%">{transaction.description}</TableCell>
                     <TableCell variant={transaction.type}>
-                      +R$ {transaction.price}
+                      {transaction.type === "income" ? "+" : "-"}{" "}
+                      {formatCurrency(transaction.price)}
                     </TableCell>
                     <TableCell>{transaction.category}</TableCell>
-                    <TableCell>{transaction.createdAt}</TableCell>
+                    <TableCell>
+                      {dateFormatter(transaction.createdAt)}
+                    </TableCell>
                   </tr>
                 );
               })}
