@@ -1,39 +1,48 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Radio from "@radix-ui/react-radio-group";
-import { ArrowCircleUp, X } from "phosphor-react";
+import * as Dialog from '@radix-ui/react-dialog'
+import * as Radio from '@radix-ui/react-radio-group'
+import { ArrowCircleUp, X } from 'phosphor-react'
 
-import cn from "../../utils/cn";
-import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import cn from '../../utils/cn'
+import { z } from 'zod'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { TransactionContext } from '../../context/transaction-context'
+import { useContext } from 'react'
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
   price: z.number(),
   category: z.string(),
-  type: z.enum(["income", "outcome"]),
-});
+  type: z.enum(['income', 'outcome']),
+})
 
-type NewTransactionFormInputs = z.infer<typeof newTransactionFormSchema>;
+type NewTransactionFormInputs = z.infer<typeof newTransactionFormSchema>
 
 export function NewTransactionModal() {
+  const { createTransaction } = useContext(TransactionContext)
   const {
     handleSubmit,
     register,
     formState: { isSubmitting },
+    reset,
     control,
   } = useForm<NewTransactionFormInputs>({
     resolver: zodResolver(newTransactionFormSchema),
     defaultValues: {
-      description: "",
+      description: '',
       price: 0,
-      category: "",
-      type: "income",
+      category: '',
+      type: 'income',
     },
-  });
+  })
 
-  function handleCreateNewTransaction(data: NewTransactionFormInputs) {
-    console.log(data);
+  async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const { category, description, price, type } = data
+
+    await createTransaction({ category, description, price, type })
+    reset()
   }
 
   return (
@@ -57,21 +66,21 @@ export function NewTransactionModal() {
               type="text"
               placeholder="Descrição"
               required
-              {...register("description")}
+              {...register('description')}
             />
             <input
               className="rounded-md border-0 bg-gray-900 text-gray-300 p-4 placeholder:text-gray-500"
               type="text"
               placeholder="Preço"
               required
-              {...register("price", { valueAsNumber: true })}
+              {...register('price', { valueAsNumber: true })}
             />
             <input
               className="rounded-md border-0 bg-gray-900 text-gray-300 p-4 placeholder:text-gray-500"
               type="text"
               placeholder="Categoria"
               required
-              {...register("category")}
+              {...register('category')}
             />
 
             <Controller
@@ -95,7 +104,7 @@ export function NewTransactionModal() {
                       value="outcome"
                     />
                   </Radio.Root>
-                );
+                )
               }}
             />
             <button
@@ -104,7 +113,15 @@ export function NewTransactionModal() {
               type="submit"
               disabled={isSubmitting}
             >
-              Cadastrar
+              {isSubmitting ? (
+                <div className=" flex items-center justify-center w-full">
+                  <span className="rounded-full animate-spin border-2 border-white w-4 h-4"></span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 justify-center">
+                  Cadastrar
+                </div>
+              )}
             </button>
           </form>
           <Dialog.Close className="absolute bg-transparent border-0 leading-0 cursor-pointer top-6 right-6 text-zinc-500 hover:text-zinc-100">
@@ -113,14 +130,14 @@ export function NewTransactionModal() {
         </Dialog.Content>
       </Dialog.Portal>
     </>
-  );
+  )
 }
 
 interface ITransactionTypeButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "income" | "outcome";
-  label: string;
-  value: string;
+  variant?: 'income' | 'outcome'
+  label: string
+  value: string
 }
 
 export function TransactionTypeButton({
@@ -135,24 +152,24 @@ export function TransactionTypeButton({
         type="button"
         {...props}
         className={cn(
-          "group bg-gray-700 rounded-md p-4 flex items-center justify-center gap-2 text-gray-300 border-0 cursor-pointer hover:bg-gray-600 transition-colors",
+          'group bg-gray-700 rounded-md p-4 flex items-center justify-center gap-2 text-gray-300 border-0 cursor-pointer hover:bg-gray-600 transition-colors',
           {
-            "focus:ring-2 focus:bg-green-500 focus:ring-offset-2 focus:text-white":
-              variant === "income",
-            "focus:bg-red-500 focus:ring-offset-2 focus:text-white":
-              variant === "outcome",
-          }
+            'focus:ring-2 focus:bg-green-500 focus:ring-offset-2 focus:text-white':
+              variant === 'income',
+            'focus:bg-red-500 focus:ring-offset-2 focus:text-white':
+              variant === 'outcome',
+          },
         )}
       >
         <ArrowCircleUp
           size={24}
-          className={cn(" group-focus:text-white", {
-            "text-green-300 ": variant === "income",
-            "text-red-300  rotate-180 ": variant === "outcome",
+          className={cn(' group-focus:text-white', {
+            'text-green-300 ': variant === 'income',
+            'text-red-300  rotate-180 ': variant === 'outcome',
           })}
         />
         {label}
       </button>
     </Radio.Item>
-  );
+  )
 }

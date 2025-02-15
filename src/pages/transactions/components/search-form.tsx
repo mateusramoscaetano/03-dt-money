@@ -1,15 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MagnifyingGlass } from "phosphor-react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { MagnifyingGlass } from 'phosphor-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { TransactionContext } from '../../../context/transaction-context'
+import { useContext } from 'react'
 
 const searchFormSchema = z.object({
   query: z.string(),
-});
+})
 
-type SearchFormInputs = z.infer<typeof searchFormSchema>;
+type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function SearchForm() {
+  const { fetchTransactions } = useContext(TransactionContext)
+
   const {
     register,
     handleSubmit,
@@ -17,16 +21,12 @@ export function SearchForm() {
   } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchFormSchema),
     defaultValues: {
-      query: "",
+      query: '',
     },
-  });
+  })
 
   async function handleSearchTransactions(data: SearchFormInputs) {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
-
-    console.log(data);
+    await fetchTransactions(data.query)
   }
 
   return (
@@ -38,9 +38,10 @@ export function SearchForm() {
         <input
           placeholder="Busque por transações"
           className="flex-1 rounded-md border-0 bg-gray-900 p-4 placeholder:text-gray-500 text-gray-300 "
-          {...register("query")}
+          {...register('query')}
         />
         <button
+          type="submit"
           disabled={isSubmitting}
           className="flex items-center gap-3 border-[1px] border-green-300 text-green-300 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-green-300
         rounded-md bg-transparent  p-4 hover:bg-green-500 hover:text-white hover:border-green-500 transition-colors duration-200"
@@ -56,5 +57,5 @@ export function SearchForm() {
         </button>
       </form>
     </>
-  );
+  )
 }

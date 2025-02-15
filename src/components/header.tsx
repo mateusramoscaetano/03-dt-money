@@ -1,7 +1,7 @@
-import logo from "../assets/logo.svg";
-import { NewTransactionButton } from "./ui/new-transaction-button";
-import * as Dialog from "@radix-ui/react-dialog";
-import { NewTransactionModal } from "./ui/new-transaction-modal";
+import logo from '../assets/logo.svg'
+import { NewTransactionButton } from './ui/new-transaction-button'
+import * as Dialog from '@radix-ui/react-dialog'
+import { NewTransactionModal } from './ui/new-transaction-modal'
 
 export function Header() {
   return (
@@ -18,5 +18,5 @@ export function Header() {
         </div>
       </header>
     </>
-  );
+  )
 }

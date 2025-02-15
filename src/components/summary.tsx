@@ -1,10 +1,10 @@
-import { ArrowCircleDown, ArrowCircleUp, CurrencyDollar } from "phosphor-react";
-import { TransactionCard } from "./ui/transaction-card";
-import { formatCurrency } from "../utils/formatter";
-import { useSummary } from "../hooks/use-summary";
+import { ArrowCircleDown, ArrowCircleUp, CurrencyDollar } from 'phosphor-react'
+import { TransactionCard } from './ui/transaction-card'
+import { formatCurrency } from '../utils/formatter'
+import { useSummary } from '../hooks/use-summary'
 
 export function Summary() {
-  const summary = useSummary();
+  const summary = useSummary()
 
   return (
     <>
@@ -27,5 +27,5 @@ export function Summary() {
         />
       </section>
     </>
-  );
+  )
 }

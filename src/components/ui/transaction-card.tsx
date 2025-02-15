@@ -1,10 +1,10 @@
-import cn from "../../utils/cn";
+import cn from '../../utils/cn'
 
 interface ITransactionCardProps {
-  icon: React.ReactNode;
-  title: string;
-  total: string;
-  variant?: "green";
+  icon: React.ReactNode
+  title: string
+  total: string
+  variant?: 'green'
 }
 
 export function TransactionCard({
@@ -16,8 +16,8 @@ export function TransactionCard({
   return (
     <>
       <div
-        className={cn("bg-gray-600 rounded-md p-8", {
-          "bg-green-700": variant === "green",
+        className={cn('bg-gray-600 rounded-md p-8', {
+          'bg-green-700': variant === 'green',
         })}
       >
         <header className="flex items-center justify-between text-gray-300">
@@ -28,5 +28,5 @@ export function TransactionCard({
         <strong className="block mt-4 text-[2rem]">{total}</strong>
       </div>
     </>
-  );
+  )
 }
